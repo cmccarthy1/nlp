@@ -65,10 +65,11 @@ parser.i.alphalang:(!). flip(
 // Create new parser
 // Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices spell
 parser.newParser:{[lang;opts]
+  if[`spell in opts;0N!.p.import[`spacy_hunspell]`:spaCyHunSpell];
   opts:{distinct x,raze parser.i.depOpts x}/[colnames:opts];
   disabled:`ner`tagger`parser except opts;
-  model:0N!parser.i.newSubParser[lang;opts;disabled];
-  tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter 0N!opts;
+  model:parser.i.newSubParser[lang;opts;disabled];
+  tokenAttrs:parser.i.q2spacy key[parser.i.q2spacy]inter opts;
   pyParser:parser.i.parseText[model;tokenAttrs;opts;];
   stopwords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
   parser.i.runParser[pyParser;colnames;opts;stopwords]}
@@ -83,8 +84,7 @@ parser.i.newSubParser:{[lang;opts;disabled]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
   if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sentencizer];.p.pyget `x_sbd]];
   if[`spell in opts;sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;
-  /0N!.p.tuple parser.i.spelldict string lang];model[`:add_pipe]hunspell];  
-  `linux];model[`:add_pipe]hunspell];
+  .p.tuple parser.i.spelldict string lang];model[`:add_pipe]hunspell]; 
  model}
 
 // Operations that must be done in q, or give better performance in q
