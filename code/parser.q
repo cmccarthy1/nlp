@@ -74,7 +74,7 @@ parser.newParser:{[lang;opts]
   parser.i.runParser[pyParser;colnames;opts;stopwords]}
 
 parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
- "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
+ "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper 0N!x]}
 
 // Returns a parser for the given language
 parser.i.newSubParser:{[lang;opts;disabled] 
@@ -91,7 +91,7 @@ parser.i.runParser:{[pyParser;colnames;opts;stopwords;docs]
   t:parser.i.cleanUTF8 each docs;
   parsed:parser.i.unpack[pyParser;opts;stopwords]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
-  (colnames except `spell)#@[parsed;`text;:;t]}
+  (0N!colnames except `spell)#@[parsed;`text;:;t]}
 
 // Operations that must be done in q, or give better performance in q
 parser.i.unpack:{[pyParser;opts;stopwords;text]
