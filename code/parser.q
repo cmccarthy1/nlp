@@ -2,10 +2,24 @@
 
 .p.import[`sys;:;`:argv;()]; / spacy expects python be the main process
 
+p)def spell(doc,model):
+  lst=[]
+  for s in doc:
+    if s._.hunspell_spell==False:
+      sug=s._.hunspell_suggest
+      if len(sug)>0:
+        ([lst.append(n)for n in model((sug)[0])]) 
+      else:lst.append(s)
+    else:
+        lst.append(s)
+  return lst
+
 // Python functions for running spacy
 p)def get_doc_info(parser,tokenAttrs,opts,text):
-  doc=parser(text)
-  res=[[getattr(w,a)for w in doc]for a in tokenAttrs]
+  doc=doc1=parser(text)
+  if('spell' in opts):
+    doc1=spell(doc,parser)
+  res=[[getattr(w,a)for w in doc1]for a in tokenAttrs]
   if('sentChars' in opts): # indices of first+last char per sentence
     res.append([(s.start_char,s.end_char)for s in doc.sents])
   if('sentIndices' in opts): # index of first token per sentence
@@ -49,8 +63,8 @@ parser.i.alphalang:(!). flip(
   (`zh;`Chinese))
 
 // Create new parser
-// Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices
-parser.i.newParser:{[lang;opts]
+// Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices spell
+parser.newParser:{[lang;opts]
   opts:{distinct x,raze parser.i.depOpts x}/[colnames:opts];
   disabled:`ner`tagger`parser except opts;
   model:parser.i.newSubParser[lang;opts;disabled];
@@ -59,20 +73,23 @@ parser.i.newParser:{[lang;opts]
   stopwords:(`$.p.list[model`:Defaults.stop_words]`),`$"-PRON-";
   parser.i.runParser[pyParser;colnames;opts;stopwords]}
 
+parser.i.spelldict:{{("/usr/share/hunspell/",x,"_",y,".dic";
+ "/usr/share/hunspell/",x,"_",y,".aff")}[x]$["en"~x;"US";upper x]}
+
 // Returns a parser for the given language
 parser.i.newSubParser:{[lang;opts;disabled] 
  chklng:parser.i.alphalang lang;
  model:.p.import[$[`~chklng;`spacy;sv[`]`spacy.lang,lang]][hsym$[`~chklng;`load;chklng]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
-  if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sentencizer];.p.pyget `x_sbd]];
- model}
+  if[`spell in opts;sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;`linux];model[`:add_pipe]hunspell];  
+  model}
 
 // Operations that must be done in q, or give better performance in q
 parser.i.runParser:{[pyParser;colnames;opts;stopwords;docs]
   t:parser.i.cleanUTF8 each docs;
   parsed:parser.i.unpack[pyParser;opts;stopwords]each t;
   if[`keywords in opts;parsed[`keywords]:TFIDF parsed];
-  colnames#@[parsed;`text;:;t]}
+  (colnames except `spell)#@[parsed;`text;:;t]}
 
 // Operations that must be done in q, or give better performance in q
 parser.i.unpack:{[pyParser;opts;stopwords;text]
