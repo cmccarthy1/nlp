@@ -28,6 +28,7 @@ install:
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
       sudo apt-get -y install libhunspell-dev;
       pip install -r requirements.txt;
+      ls /usr/share/hunspell
       python -m spacy download en;
     fi
 beforescript:
