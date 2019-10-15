@@ -2,7 +2,7 @@
 \l init.q
 \d .nlp
 lines: read0 `:tests/data/test.mbox;
-emails:email.parseMail each "\n" sv/:  (where lines like "From *") cut lines;
+emails:email.i.parseMail each "\n" sv/:  (where lines like "From *") cut lines;
 to: 9#enlist enlist("";"john.doe@domain.com");
 to[0;0;0]:"John Doe";
 emails[`to]~to

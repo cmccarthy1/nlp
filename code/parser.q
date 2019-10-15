@@ -65,7 +65,7 @@ parser.i.alphalang:(!). flip(
 // Create new parser
 // Valid opts : text keywords likeEmail likeNumber likeURL isStop tokens lemmas uniPOS pennPOS starts sentChars sentIndices spell
 parser.newParser:{[lang;opts]
-  if[`spell in opts;0N!.p.import[`spacy_hunspell]`:spaCyHunSpell];
+  if[`spell in opts;.p.import[`spacy_hunspell]`:spaCyHunSpell];
   opts:{distinct x,raze parser.i.depOpts x}/[colnames:opts];
   disabled:`ner`tagger`parser except opts;
   model:parser.i.newSubParser[lang;opts;disabled];
