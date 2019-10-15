@@ -1,6 +1,6 @@
 numpy
 beautifulsoup4
 spacy
-hunspell
+hunspell==0.5.0
 spacy_hunspell
 langid

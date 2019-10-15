@@ -25,11 +25,9 @@ install:
   - cp -r $(conda info --base)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
-      echo -n $QLIC_KC |base64 --decode > q/kc.lic;
-      sudo apt-get -y install libhunspell-dev;
-      sudo apt-get -y install python-dev;
+      echo -n $QLIC_KC |base64 --decode > q/kc.lic; 
       pip install -r requirements.txt;
-      sudo mkdir /usr/share/hunspell;
+      sudo apt-get -y install libhunspell-dev;
       python -m spacy download en;
     fi
 beforescript:
