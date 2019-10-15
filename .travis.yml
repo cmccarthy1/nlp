@@ -26,10 +26,9 @@ install:
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic; 
-      sudo apt-get -y install libhunspell-dev;
+      sudo apt install python-dev libhunspell-dev;
       pip install -r requirements.txt;
       python -m spacy download en;
-      python3 -m pip install hunspell;
     fi
 beforescript:
   - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
