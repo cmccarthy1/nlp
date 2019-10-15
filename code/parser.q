@@ -84,7 +84,8 @@ parser.i.newSubParser:{[lang;opts;disabled]
    ]. raze[$[`~chklng;lang;()];`disable pykw disabled];
   if[`sbd in opts;model[`:add_pipe]$[`~chklng;model[`:create_pipe;`sentencizer];.p.pyget `x_sbd]];
   if[`spell in opts;sphun:.p.import[`spacy_hunspell]`:spaCyHunSpell;hunspell:sphun[model;
-  .p.tuple parser.i.spelldict string lang]]; 
+  /p.tuple parser.i.spelldict string lang]]; 
+  `linux]];
  model}
 
 // Operations that must be done in q, or give better performance in q
