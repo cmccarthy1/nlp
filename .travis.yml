@@ -30,7 +30,6 @@ install:
       pip install -r requirements.txt;
       python -m spacy download en;
       python3 -m pip install hunspell;
-      dpkg -L hunspell;
     fi
 beforescript:
   - IMPLEMENTATION=$(if [[ "x$TRAVIS_TAG" == "x" ]]; then echo $TRAVIS_BRANCH-$TRAVIS_COMMIT; else echo $TRAVIS_TAG; fi;)
