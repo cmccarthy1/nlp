@@ -1,6 +1,5 @@
 numpy
 beautifulsoup4
-cyhunspell
 spacy
 hunspell==0.5.0
 spacy_hunspell
