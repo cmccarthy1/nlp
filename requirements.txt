@@ -2,8 +2,6 @@ numpy
 beautifulsoup4
 spacy
 hunspell
-hunspell-en-us
-libhunspell-dev
-myspell-en-gb
+pyhunspell
 spacy_hunspell
 langid

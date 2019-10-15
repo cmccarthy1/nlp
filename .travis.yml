@@ -27,6 +27,7 @@ install:
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic;
       sudo apt-get -y install libhunspell-dev;
+      sudo apt-get -y install python-dev;
       pip install -r requirements.txt;
       sudo mkdir /usr/share/hunspell;
       python -m spacy download en;
