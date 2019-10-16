@@ -23,11 +23,12 @@ install:
   - if [ $TRAVIS_OS_NAME = linux ]; then QLIBDIR=l64; elif [ $TRAVIS_OS_NAME = osx ]; then QLIBDIR=m64; else echo "unknown OS ('$TRAVIS_OS_NAME')" >&2; exit 1; fi; export QLIBDIR
   - conda install -c kx embedPy # grab kdb+ and embedPy with conda
   - cp -r $(conda info --base)/q q && export QHOME=$(pwd)/q && export PATH=$QHOME/$QLIBDIR:$PATH
+  - mkdir /Library/Spelling/
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic; 
-      if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libhunspell-dev hunspell;elif [ $TRAVIS_OS_NAME = osx ];then wget https://iweb.dl.sourceforge.net/project/wordlist/speller/2019.10.06/hunspell-en_US-2019.10.06.zip; unzip hunspell-en_US-2019.10.06;mkdir /Library/Spelling/; mv en_US.dic en_US.aff /Library/Spelling/; brew install hunspell; 
-      export C_INCLUDE_PATH=/usr/local/include/hunspell; sudo ln -sf /usr/local/lib/libhunspell-1.3-0.a /usr/local/lib/libhunspell.a ; pip install hunspell; fi;
+      if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libhunspell-dev hunspell;elif [ $TRAVIS_OS_NAME = osx ];then wget https://iweb.dl.sourceforge.net/project/wordlist/speller/2019.10.06/hunspell-en_US-2019.10.06.zip; unzip hunspell-en_US-2019.10.06; mv en_US.dic en_US.aff /Library/Spelling/; brew install hunspell; 
+      export C_INCLUDE_PATH=/usr/local/include/hunspell; sudo ln -sf /usr/local/lib/libhunspell-1.3-0.a /usr/local/lib/libhunspell.a ; CFLAGS=$(pkg-config --cflags hunspell) LDFLAGS=$(pkg-config --libs hunspell) pip install hunspell;pip install hunspell; fi;
       pip install -r requirements.txt;
       python -m spacy download en;
     fi
