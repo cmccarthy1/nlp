@@ -26,8 +26,8 @@ install:
   # grab latest embedpy
   - if [[ "x$QLIC_KC" != "x" ]]; then
       echo -n $QLIC_KC |base64 --decode > q/kc.lic; 
-      if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libhunspell-dev hunspell;elif [ $TRAVIS_OS_NAME = osx ]; ;then 
-      export C_INCLUDE_PATH=/usr/local/include/hunspell; ln -s /usr/local/lib/libhunspell-1.3-0.a /usr/local/lib/libhunspell.a ;brew install hunspell;pip install hunspell; fi;
+      if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libhunspell-dev hunspell;elif [ $TRAVIS_OS_NAME = osx ];then 
+      export C_INCLUDE_PATH=/usr/local/include/hunspell; ln -s /usr/local/lib/libhunspell-1.3-0.a /usr/local/lib/libhunspell.a ; brew install hunspell;pip install hunspell; fi;
       pip install -r requirements.txt;
       python -m spacy download en;
     fi
