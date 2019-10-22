@@ -17,6 +17,7 @@ install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
   
   
   # Useful for debugging any issues with conda
@@ -39,8 +40,10 @@ install:
       export CPPFLAGS="-I/usr/local/opt/readline/include";
       export C_INCLUDE_PATH=/usr/local/Cellar/hunspell; 
       export PKG_CONFIG_PATH="/usr/local/opt/readline/lib/pkgconfig"
-      sudo ln -s /usr/local/lib/libhunspell-1.7.a /usr/local/lib/libhunspell.a;
-      sudo ln -s /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell-1.7.dylib /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell.dylib;
+      ln -s /usr/local/lib/libhunspell-1.7.a /usr/local/lib/libhunspell.a;
+      ln -s /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell-1.7.dylib /usr/local/Cellar/hunspell/1.7.0_2/lib/libhunspell.dylib;
+      pkg-config --cflags hunspell;
+      pkg-config --libs hunspell;
       CFLAGS=$(pkg-config --cflags hunspell) LDFLAGS=$(pkg-config --libs hunspell) pip install hunspell; fi;
       pip install -r requirements.txt;
       python -m spacy download en;
