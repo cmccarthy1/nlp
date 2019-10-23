@@ -133,6 +133,18 @@ bi_gram:{[corpus]
 
 /util 
 
+// Find Regular expressions within texts
+findRegex:{[text;expr]regex.matchAll[regex.objects[attr];text]}
+
+//Remove any ascii characters from a text
+rmv_ascii:regex.rmv_ascii
+
+//Remove certain characters from a string of text
+rmv_custom:regex.rmv_custom
+
+//Remove and replace certain characters from a string of text
+rmv_master:regex.rmv_master
+
 // Detect language from text
 detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
 
@@ -144,3 +156,10 @@ loadTextFromDir:{[fp]
 // Get all sentences for a doc
 getSentences:i.getSentences
 
+//n-gram /slower than bi-gram, needs to be looked at
+ngram:{[corpus;n]
+ tokens:raze corpus[`tokens]@'where each not corpus[`isStop]|corpus[`tokens]like\:"[0-9]*";
+ windows:(ng-1)_{1_x,y}\[(ng:n-1)#0;tokens];
+ occ:(distinct windows)!{count where min y=x}[flip windows]each distinct windows;
+ raze{[x;y;z;tok;w;nt](enlist(w;nt))!enlist(count where nt=tok z+where min w=x)%y[w]}[flip windows;occ;ng;tokens]
+   '[windows;next(ng-1)_tokens]}
