@@ -136,14 +136,14 @@ bi_gram:{[corpus]
 // Find Regular expressions within texts
 findRegex:{[text;expr]regex.matchAll[regex.objects[attr];text]}
 
-//Remove any ascii characters from a text
-rmv_ascii:regex.rmv_ascii
+//Remove any non-ascii characters from a text
+ascii:{x where x within (0;127)}
 
 //Remove certain characters from a string of text
-rmv_custom:regex.rmv_custom
+rmv_custom:{rtrim raze(l where{not(max ,'/)x like/:y}[;y]each l:" "vs x),'" "}
 
 //Remove and replace certain characters from a string of text
-rmv_master:regex.rmv_master
+rmv_master:{{x:ssr[x;y;z];x}[;;z]/[x;y]}
 
 // Detect language from text
 detectLang:{[text]`$.p.import[`langid][`:classify;<][raze text]0}
